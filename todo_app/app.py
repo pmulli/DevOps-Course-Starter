@@ -11,8 +11,8 @@ app.config.from_object(Config)
 
 @app.route('/')
 def index():
-    itemList = session_items.get_items()
-    return render_template('index.html', itemList = itemList)
+    item_list = session_items.get_items()
+    return render_template('index.html', itemList = item_list)
 
  
 @app.route('/items', methods=['POST'])
