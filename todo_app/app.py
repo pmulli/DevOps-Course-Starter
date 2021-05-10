@@ -14,7 +14,9 @@ def index():
     trello_board = TrelloBoard("609542268e084d62bd913af7")
     item_list = trello_board.get_cards()
     print(item_list)
-    return render_template('index.html', itemList = item_list)
+    list_list = trello_board.get_lists()
+    print(list_list)
+    return render_template('index.html', itemList = item_list, listList = list_list)
 
  
 @app.route('/items', methods=['POST'])

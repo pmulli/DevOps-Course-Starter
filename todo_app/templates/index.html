@@ -12,7 +12,13 @@
       <h2>Items</h2>
       <ul class="list-group mb-4">
         {% for item in itemList %}
-          <li>{{item.name}}</li>
+          <li>{{item.name}} 
+            <select name="idList_{{item.id}}" id="idList_{{item.id}}">
+              {% for list in listList %}
+                <option value="{{ list.id }}"{% if list.id == item.idList %} SELECTED{% endif %}>{{ list.name }}</option>
+              {% endfor %}
+            </select>
+          </li>
         {% endfor %}
       </ul>
       <form action = "/items" method = "post">

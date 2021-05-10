@@ -11,6 +11,7 @@ trello_board_id="609542268e084d62bd913af7"
 class TrelloBoard:
 
     cards = []
+    lists = []
 
     def __init__(self, board_id):
         self.board_id = board_id
@@ -38,6 +39,30 @@ class TrelloBoard:
         self.parse_get_cards_response(get_cards_response.json())
 
         return self.cards
+
+
+    def parse_get_lists_response(self,get_lists_response):
+        self.lists = []
+        for list in get_lists_response:
+                self.lists += [
+                    {
+                        "id": list['id'],
+                        "name": list['name']
+                    }
+                ]
+        return self.lists
+
+
+    def get_lists(self):
+        lists_url = 'https://api.trello.com/1/boards/' + trello_board_id + '/lists'
+        print(lists_url)
+        get_lists_response = requests.get(lists_url, params={ 'key':trello_key,  'token' : trello_token})
+        print(get_lists_response)
+        print(get_lists_response.json())
+        
+        self.parse_get_lists_response(get_lists_response.json())
+
+        return self.lists
 
 
     def get_card(self,card_id):
