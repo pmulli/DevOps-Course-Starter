@@ -26,7 +26,9 @@ def add_item():
     trello_board = TrelloBoard(trello_board_id)
     trello_board.add_card(title, list_id)
 
-    return render_template('confirmation.html')
+    item_list = trello_board.get_cards()
+    list_list = trello_board.get_lists()
+    return render_template('index.html', itemList = item_list, listList = list_list)
 
 @app.route('/items/<item_id>')
 def update_item_status(item_id):    
@@ -34,7 +36,9 @@ def update_item_status(item_id):
     trello_board = TrelloBoard(trello_board_id)
     trello_board.update_card_status(item_id, list_id)
 
-    return render_template('confirmation.html')
+    item_list = trello_board.get_cards()
+    list_list = trello_board.get_lists()
+    return render_template('index.html', itemList = item_list, listList = list_list)
 
 
 if __name__ == '__main__':

@@ -33,8 +33,6 @@ class TrelloBoard:
         cards_url = 'https://api.trello.com/1/boards/' + trello_board_id + '/cards'
         print(cards_url)
         get_cards_response = requests.get(cards_url, params={ 'key':trello_key,  'token' : trello_token})
-        print(get_cards_response)
-        print(get_cards_response.json())
         
         self.parse_get_cards_response(get_cards_response.json())
 
@@ -73,7 +71,6 @@ class TrelloBoard:
         create_card_url = 'https://api.trello.com/1/cards'
         print(create_card_url)
         create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id, 'name' : title})
-        print(create_card_response)
         return create_card_response
 
 
@@ -81,5 +78,4 @@ class TrelloBoard:
         update_card_list_url = 'https://api.trello.com/1/cards/' + card_id
         print(update_card_list_url)
         update_card_list_response = requests.put(update_card_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id})
-        print(update_card_list_response)
         return update_card_list_response
