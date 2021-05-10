@@ -15,21 +15,26 @@ trello_board_id = "609542268e084d62bd913af7"
 def index():
     trello_board = TrelloBoard(trello_board_id)
     item_list = trello_board.get_cards()
-    print(item_list)
     list_list = trello_board.get_lists()
-    print(list_list)
     return render_template('index.html', itemList = item_list, listList = list_list)
 
  
 @app.route('/items', methods=['POST'])
 def add_item():
     title = request.form.get('title')
-    idList = request.form.get('idList')
+    list_id = request.form.get('idList')
     trello_board = TrelloBoard(trello_board_id)
-    trello_board.add_card(title, idList)
+    trello_board.add_card(title, list_id)
 
     return render_template('confirmation.html')
 
+@app.route('/items/<item_id>')
+def update_item_status(item_id):    
+    list_id = request.args.get('idList')
+    trello_board = TrelloBoard(trello_board_id)
+    trello_board.update_card_status(item_id, list_id)
+
+    return render_template('confirmation.html')
 
 
 if __name__ == '__main__':

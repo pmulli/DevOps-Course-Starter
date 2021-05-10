@@ -68,14 +68,18 @@ class TrelloBoard:
         return next((card for card in cards if card['id'] == card_id), None)
 
 
-    def add_card(self,title,idList):
+    def add_card(self,title,list_id):
 
         create_card_url = 'https://api.trello.com/1/cards'
         print(create_card_url)
-        create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : idList, 'name' : title})
+        create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id, 'name' : title})
         print(create_card_response)
         return create_card_response
 
 
-    def update_card(self,card_id):
-        return card_id
+    def update_card_status(self,card_id,list_id):
+        update_card_list_url = 'https://api.trello.com/1/cards/' + card_id
+        print(update_card_list_url)
+        update_card_list_response = requests.put(update_card_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id})
+        print(update_card_list_response)
+        return update_card_list_response
