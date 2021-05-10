@@ -4,20 +4,16 @@ from todo_app.flask_config import Config
 
 from todo_app.data import session_items
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from todo_app.data.trello_board import TrelloBoard
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-trello_key = os.getenv('TRELLO_KEY')
-trello_token = os.getenv('TRELLO_TOKEN')
-
 @app.route('/')
 def index():
-    item_list = session_items.get_items()
+    trello_board = TrelloBoard("609542268e084d62bd913af7")
+    item_list = trello_board.get_cards()
+    print(item_list)
     return render_template('index.html', itemList = item_list)
 
  
