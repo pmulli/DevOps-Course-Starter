@@ -57,8 +57,6 @@ class TrelloBoard:
         lists_url = 'https://api.trello.com/1/boards/' + trello_board_id + '/lists'
         print(lists_url)
         get_lists_response = requests.get(lists_url, params={ 'key':trello_key,  'token' : trello_token})
-        print(get_lists_response)
-        print(get_lists_response.json())
         
         self.parse_get_lists_response(get_lists_response.json())
 
@@ -70,11 +68,13 @@ class TrelloBoard:
         return next((card for card in cards if card['id'] == card_id), None)
 
 
-    def add_card(self,title):
+    def add_card(self,title,idList):
 
-        card = { 'id': id, 'title': title, 'status': 'Not Started' }
-
-        return card
+        create_card_url = 'https://api.trello.com/1/cards'
+        print(create_card_url)
+        create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : idList, 'name' : title})
+        print(create_card_response)
+        return create_card_response
 
 
     def update_card(self,card_id):

@@ -9,9 +9,11 @@ from todo_app.data.trello_board import TrelloBoard
 app = Flask(__name__)
 app.config.from_object(Config)
 
+trello_board_id = "609542268e084d62bd913af7"
+
 @app.route('/')
 def index():
-    trello_board = TrelloBoard("609542268e084d62bd913af7")
+    trello_board = TrelloBoard(trello_board_id)
     item_list = trello_board.get_cards()
     print(item_list)
     list_list = trello_board.get_lists()
@@ -22,7 +24,10 @@ def index():
 @app.route('/items', methods=['POST'])
 def add_item():
     title = request.form.get('title')
-    session_items.add_item(title)
+    idList = request.form.get('idList')
+    trello_board = TrelloBoard(trello_board_id)
+    trello_board.add_card(title, idList)
+
     return render_template('confirmation.html')
 
 
