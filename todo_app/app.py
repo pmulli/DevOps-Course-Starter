@@ -4,10 +4,16 @@ from todo_app.flask_config import Config
 
 from todo_app.data import session_items
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+trello_key = os.getenv('TRELLO_KEY')
+trello_token = os.getenv('TRELLO_TOKEN')
 
 @app.route('/')
 def index():
