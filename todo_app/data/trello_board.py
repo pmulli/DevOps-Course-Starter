@@ -19,13 +19,7 @@ class TrelloBoard:
     def parse_get_cards_response(self,get_cards_response):
         self.cards = []
         for card in get_cards_response:
-                self.cards += [
-                    {
-                        "id": card['id'],
-                        "idList": card['idList'],
-                        "name": card['name']
-                    }
-                ]
+                self.cards += [Card(card['id'],card['idList'],card['name'])]
         return self.cards
 
 
@@ -42,12 +36,7 @@ class TrelloBoard:
     def parse_get_lists_response(self,get_lists_response):
         self.lists = []
         for list in get_lists_response:
-                self.lists += [
-                    {
-                        "id": list['id'],
-                        "name": list['name']
-                    }
-                ]
+            self.lists += [List(list['id'],list['name'])]
         return self.lists
 
 
@@ -79,3 +68,14 @@ class TrelloBoard:
         print(update_card_list_url)
         update_card_list_response = requests.put(update_card_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id})
         return update_card_list_response
+
+class Card:
+    def __init__(self, card_id, list_id, name):
+        self.card_id = card_id
+        self.list_id = list_id
+        self.name = name
+
+class List:
+    def __init__(self, list_id, name):
+        self.list_id = list_id
+        self.name = name

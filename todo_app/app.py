@@ -2,8 +2,6 @@ from flask import Flask, render_template, request
 
 from todo_app.flask_config import Config
 
-from todo_app.data import session_items
-
 from todo_app.data.trello_board import TrelloBoard
 
 app = Flask(__name__)
