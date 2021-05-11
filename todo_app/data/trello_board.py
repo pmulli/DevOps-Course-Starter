@@ -6,8 +6,6 @@ load_dotenv()
 trello_key = os.getenv('TRELLO_KEY')
 trello_token = os.getenv('TRELLO_TOKEN')
 
-trello_board_id="609542268e084d62bd913af7"
-
 class TrelloBoard:
 
     cards = []
@@ -24,7 +22,7 @@ class TrelloBoard:
 
 
     def get_cards(self):
-        cards_url = 'https://api.trello.com/1/boards/' + trello_board_id + '/cards'
+        cards_url = 'https://api.trello.com/1/boards/' + self.board_id + '/cards'
         print(cards_url)
         get_cards_response = requests.get(cards_url, params={ 'key':trello_key,  'token' : trello_token})
         
@@ -41,7 +39,7 @@ class TrelloBoard:
 
 
     def get_lists(self):
-        lists_url = 'https://api.trello.com/1/boards/' + trello_board_id + '/lists'
+        lists_url = 'https://api.trello.com/1/boards/' + self.board_id + '/lists'
         print(lists_url)
         get_lists_response = requests.get(lists_url, params={ 'key':trello_key,  'token' : trello_token})
         
