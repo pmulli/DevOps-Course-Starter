@@ -10,14 +10,28 @@
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
+      <p>(Use the dropdown lists to change the status of an item)</p>
       <ul class="list-group mb-4">
         {% for item in itemList %}
-          <li>{{item.title}}</li>
+          <form action = "/items/{{item.card_id}}" method = "get">
+            <li>{{item.name}} 
+              <select name="idList" id="idList" onchange="this.form.submit()">
+                {% for list in listList %}
+                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
+                {% endfor %}
+              </select>
+            </li>
+          </form>
         {% endfor %}
       </ul>
       <form action = "/items" method = "post">
         <p>Add item:</p>
-        <p><input type="text" name="title" /></p>
+        <p><input type="text" name="title" />
+          <select name="idList" id="idList">
+          {% for list in listList %}
+            <option value="{{ list.list_id }}">{{ list.name }}</option>
+          {% endfor %}
+        </select></p>
         <p><input type="submit" value="submit" /></p>
      </form>
     </div>
