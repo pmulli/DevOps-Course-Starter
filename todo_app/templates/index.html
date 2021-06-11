@@ -13,7 +13,7 @@
       <p>(Use the dropdown lists to change the status of an item)</p>
       <ul class="list-group mb-4">
         {% for item in itemList %}
-          <form action = "/items/{{item.card_id}}" method = "put">
+          <form action = "/items/{{item.card_id}}" method = "get">
             <li>{{item.name}} 
               <select name="idList" id="idList" onchange="this.form.submit()">
                 {% for list in listList %}

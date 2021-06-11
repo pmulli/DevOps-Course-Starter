@@ -26,9 +26,7 @@ class TrelloBoard:
         print(cards_url)
         get_cards_response = requests.get(cards_url, params={ 'key':trello_key,  'token' : trello_token})
         
-        self.parse_get_cards_response(get_cards_response.json())
-
-        return self.cards
+        return self.parse_get_cards_response(get_cards_response.json())
 
 
     def parse_get_lists_response(self,get_lists_response):
@@ -46,11 +44,6 @@ class TrelloBoard:
         self.parse_get_lists_response(get_lists_response.json())
 
         return self.lists
-
-
-    def get_card(self,card_id):
-        cards = self.get_cards()
-        return next((card for card in cards if card['id'] == card_id), None)
 
 
     def add_card(self,title,list_id):
