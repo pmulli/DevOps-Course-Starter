@@ -52,3 +52,18 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Testing the application
+
+The project is using pytest for unit testing.
+
+Add pytest as a dependency:
+- Install using `pip install pytest`
+- Execute the `Python: Configure Tests` command on the Command Palette in Visual Studio Code
+- Execute the `Python: Discover tests` command
+
+Run tests:
+- From a terminal window and project directory, `poetry run pytest`
+- With a test file open, select the `Run Test CodeLens` adornment that appears above a test method.
+- Select `Run Tests` on the Status Bar
+- In Test Explorer
