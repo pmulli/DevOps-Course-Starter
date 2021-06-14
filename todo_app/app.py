@@ -13,14 +13,41 @@ class ViewModel:
     def __init__(self, items, lists):
         self._items = items
         self._lists = lists
- 
+        self._todo_items = []
+        self._doing_items = []
+        self._done_items = []
+        self.categorise()
+        
     @property
     def items(self):
         return self._items
 
     @property
+    def todo_items(self):
+        return self._todo_items
+
+    @property
+    def doing_items(self):
+        return self._doing_items
+
+    @property
+    def done_items(self):
+        return self._done_items
+
+    @property
     def lists(self):
         return self._lists
+    
+    def categorise(self):
+        for list in self._lists:
+            for item in self._items:
+                if item.list_id == list.list_id:
+                    if list.name == 'To Do':
+                        self._todo_items+=[item]
+                    elif list.name == 'Doing':
+                        self._doing_items+=[item]
+                    elif list.name == 'Done':
+                        self._done_items+=[item]
 
 @app.route('/')
 def index():
