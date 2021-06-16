@@ -14,7 +14,7 @@ class TestIntegration:
 
     trello_board_id = "609542268e084d62bd913af7"
 
-    sample_trello_lists_response = "[{'id': '609542268e084d62bd913af8', 'name': 'To Do'}]"
+    sample_trello_lists_response = [{'id': '609542268e084d62bd913af8', 'name': 'To Do'}]
 
     @pytest.fixture
     def client(url):
@@ -29,13 +29,13 @@ class TestIntegration:
         with test_app.test_client() as client:
             yield client
 
-    @patch('requests.get')
+    @patch('requests.get', side_effect=self.mock_get_lists)
     def test_index_page(mock_get_requests, client):
         # Replace call to requests.get(url) with our own function
-        mock_get_requests.side_effect = TestIntegration.mock_get_lists("https://api.trello.com/1/boards/{TestIntegration.trello_board_id}/lists", None)
+        mock_get_requests.side_effect = TestIntegration.mock_get_lists(f'https://api.trello.com/1/boards/{TestIntegration.trello_board_id}/lists', None)
         response = client.get('/')
-        assert 1==1
-        #assert json.loads(response).['id'] == '60c71900c47a8259cb2c912d'
+        #assert response[0]['id'] == '609542268e084d62bd913af8'
+        assert mock_get_requests.side_effect.json.return_value[0]['id'] == '609542268e084d62bd913af8'
         
     def mock_get_lists(url, params):
         if url == f'https://api.trello.com/1/boards/{TestIntegration.trello_board_id}/lists':
