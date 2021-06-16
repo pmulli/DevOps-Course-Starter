@@ -62,8 +62,15 @@ Add pytest as a dependency:
 - Execute the `Python: Configure Tests` command on the Command Palette in Visual Studio Code
 - Execute the `Python: Discover tests` command
 
-Run tests:
+Run unit and integration tests:
 - From a terminal window and project directory, `poetry run pytest`
 - With a test file open, select the `Run Test CodeLens` adornment that appears above a test method.
 - Select `Run Tests` on the Status Bar
 - In Test Explorer
+
+Run Selenium Tests:
+- Download Firefox
+- Download geckodriver.exe and place in project root folder
+- Exectue `pip install selenium`
+- Exectue `pip install pytest-dotenv`
+- Exectue `poetry run pytest todo_app/tests_e2e` from project route
