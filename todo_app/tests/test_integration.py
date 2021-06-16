@@ -29,7 +29,7 @@ class TestIntegration:
         with test_app.test_client() as client:
             yield client
 
-    @patch('requests.get', side_effect=self.mock_get_lists)
+    @patch('requests.get')
     def test_index_page(mock_get_requests, client):
         # Replace call to requests.get(url) with our own function
         mock_get_requests.side_effect = TestIntegration.mock_get_lists(f'https://api.trello.com/1/boards/{TestIntegration.trello_board_id}/lists', None)

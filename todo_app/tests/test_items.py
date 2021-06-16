@@ -64,3 +64,14 @@ class TestItems:
         assert item_view_model.todo_items[0].card_id == '60c71900c47a8259cb2c912a'
         assert item_view_model.doing_items[0].card_id == '60c71900c47a8259cb2c912b'
         assert item_view_model.done_items[0].card_id == '60c71900c47a8259cb2c912c'
+
+    @staticmethod
+    def test_parse_create_board_response():
+        #Arrange
+        board_json = {'id': '60c71900c47a8259cb2c912d','name': 'Test Board'}
+
+        #Act
+        board = TrelloBoard.parse_create_board_response(board_json)
+
+        #Assert
+        assert board.board_id == '60c71900c47a8259cb2c912d'
