@@ -4,11 +4,13 @@ from todo_app.flask_config import Config
 
 from todo_app.data.trello_board import TrelloBoard
 
+import os
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('todo_app.flask_config.Config')
 
-    trello_board_id = "609542268e084d62bd913af7"
+    trello_board_id = os.getenv('TRELLO_BOARD_ID')
 
 
     @app.route('/')

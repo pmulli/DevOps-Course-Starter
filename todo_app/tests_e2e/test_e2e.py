@@ -18,6 +18,11 @@ def app_with_temp_board():
     trello_board = TrelloBoard.create_board('Test Board')
     os.environ['TRELLO_BOARD_ID'] = trello_board.board_id
 
+    # Add item and check it appears on the page
+    test_list_id = trello_board.create_list('To Do')
+    trello_board.add_card('Test Card', test_list_id)
+    trello_board.get_cards()
+
     # construct the new application
     application = app.create_app()
 
@@ -28,11 +33,9 @@ def app_with_temp_board():
     thread.start()
     yield application
 
-    #test_task_journey(driver, app)
-
     # Tear Down
     thread.join(1)
-    trello_board.delete_board()
+    #trello_board.delete_board()
 
 def test_task_journey(driver, app_with_temp_board):
     driver.get('http://localhost:5000/')
