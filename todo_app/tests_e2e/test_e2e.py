@@ -3,25 +3,27 @@ from threading import Thread
 from todo_app import app
 from todo_app.data.trello_board import TrelloBoard
 import pytest
-import dotenv
 from selenium import webdriver
 
+test_card_name = 'Test Card'
 
 @pytest.fixture(scope="module")
 def driver():
     with webdriver.Firefox() as driver:
         yield driver
         
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def app_with_temp_board():
     # Create the new board & update the board id environment variable
     trello_board = TrelloBoard.create_board('Test Board')
     os.environ['TRELLO_BOARD_ID'] = trello_board.board_id
 
     # Add item and check it appears on the page
-    test_list_id = trello_board.create_list('To Do')
-    test_card_name = 'Test Card'
-    test_card_id = trello_board.create_card(test_card_name, test_list_id)
+    test_to_do_list_id = trello_board.create_list('To Do')
+    os.environ['test_to_do_list_id'] = test_to_do_list_id
+    test_done_list_id = trello_board.create_list('Done')
+    os.environ['test_done_list_id'] = test_done_list_id
+    trello_board.create_card(test_card_name, test_to_do_list_id)
     trello_board.get_cards()
 
     # construct the new application
@@ -34,8 +36,6 @@ def app_with_temp_board():
     thread.start()
     yield application
 
-    #Verifiy the page
-
     # Tear Down
     thread.join(1)
     trello_board.delete_board()
@@ -45,4 +45,8 @@ def test_task_journey(driver, app_with_temp_board):
     assert driver.title == 'To-Do App'
 
     #Check added card appears on page
-    assert 'Test Card' in driver.page_source
+    assert test_card_name in driver.page_source
+
+    #Change list dropdown and check it has changed
+    driver.find_element_by_xpath("//select[@name='idList']/option[@value='"+os.environ['test_done_list_id']+"']").click()
+    assert driver.find_element_by_id('idList').get_attribute('value') == os.environ['test_done_list_id']

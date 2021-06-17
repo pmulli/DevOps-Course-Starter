@@ -1,14 +1,9 @@
-from todo_app.data.trello_board import TrelloBoard
-from todo_app.data.trello_board import Card
-from todo_app.data.trello_board import List
-from todo_app.app import ViewModel
 from todo_app import app
 from unittest.mock import patch
 from unittest.mock import Mock
 
 import pytest
 import dotenv
-import json
 
 class TestIntegration:
 
