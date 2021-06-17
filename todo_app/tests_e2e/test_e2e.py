@@ -20,7 +20,8 @@ def app_with_temp_board():
 
     # Add item and check it appears on the page
     test_list_id = trello_board.create_list('To Do')
-    trello_board.add_card('Test Card', test_list_id)
+    test_card_name = 'Test Card'
+    test_card_id = trello_board.create_card(test_card_name, test_list_id)
     trello_board.get_cards()
 
     # construct the new application
@@ -33,10 +34,15 @@ def app_with_temp_board():
     thread.start()
     yield application
 
+    #Verifiy the page
+
     # Tear Down
     thread.join(1)
-    #trello_board.delete_board()
+    trello_board.delete_board()
 
 def test_task_journey(driver, app_with_temp_board):
     driver.get('http://localhost:5000/')
     assert driver.title == 'To-Do App'
+
+    #Check added card appears on page
+    assert 'Test Card' in driver.page_source

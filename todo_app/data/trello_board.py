@@ -51,9 +51,13 @@ class TrelloBoard:
         return create_list_id
 
 
-    def add_card(self,title,list_id):
+    def parse_create_card_response(create_card_response):
+        return create_card_response['id']
+
+    def create_card(self,title,list_id):
         create_card_url = 'https://api.trello.com/1/cards'
         create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id, 'name' : title})
+        create_card_id = TrelloBoard.parse_create_card_response(create_card_response.json())
         return create_card_response
 
 

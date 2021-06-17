@@ -27,7 +27,7 @@ def create_app():
         title = request.form.get('title')
         list_id = request.form.get('idList')
         trello_board = TrelloBoard(trello_board_id)
-        trello_board.add_card(title, list_id)
+        trello_board.create_card(title, list_id)
 
         items = trello_board.get_cards()
         lists = trello_board.get_lists()
