@@ -7,16 +7,25 @@
     <p class="lead">Just another to-do app.</p>
   </div>
 
+  <form action = "/items" method = "post">
+    <p>Add item: <input type="text" name="title" />
+      <select name="idList" id="idList">
+      {% for list in view_model.lists %}
+        <option value="{{ list.list_id }}">{{ list.name }}</option>
+      {% endfor %}
+    </select> <input type="submit" value="submit" /></p>
+ </form>
+
+  <p>(Use the dropdown lists to change the status of an existing item)</p>
   <div class="row">
-    <div class="col-md-12">
-      <h2>Items</h2>
-      <p>(Use the dropdown lists to change the status of an item)</p>
+    <div class="col">
+      <h2>To Do</h2>
       <ul class="list-group mb-4">
-        {% for item in itemList %}
+        {% for item in view_model.todo_items %}
           <form action = "/items/{{item.card_id}}" method = "get">
             <li>{{item.name}} 
               <select name="idList" id="idList" onchange="this.form.submit()">
-                {% for list in listList %}
+                {% for list in view_model.lists %}
                   <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
                 {% endfor %}
               </select>
@@ -24,16 +33,38 @@
           </form>
         {% endfor %}
       </ul>
-      <form action = "/items" method = "post">
-        <p>Add item:</p>
-        <p><input type="text" name="title" />
-          <select name="idList" id="idList">
-          {% for list in listList %}
-            <option value="{{ list.list_id }}">{{ list.name }}</option>
-          {% endfor %}
-        </select></p>
-        <p><input type="submit" value="submit" /></p>
-     </form>
+    </div>
+    <div class="col">
+      <h2>Doing</h2>
+      <ul class="list-group mb-4">
+        {% for item in view_model.doing_items %}
+          <form action = "/items/{{item.card_id}}" method = "get">
+            <li>{{item.name}} 
+              <select name="idList" id="idList" onchange="this.form.submit()">
+                {% for list in view_model.lists %}
+                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
+                {% endfor %}
+              </select>
+            </li>
+          </form>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Done</h2>
+      <ul class="list-group mb-4">
+        {% for item in view_model.done_items %}
+          <form action = "/items/{{item.card_id}}" method = "get">
+            <li>{{item.name}} 
+              <select name="idList" id="idList" onchange="this.form.submit()">
+                {% for list in view_model.lists %}
+                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
+                {% endfor %}
+              </select>
+            </li>
+          </form>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endblock %}

@@ -118,3 +118,7 @@ env/
 
 ### Configuration files ###
 .env
+
+### Firefox webdriver files - should download latest ###
+geckodriver.log
+geckodriver.exe
