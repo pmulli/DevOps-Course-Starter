@@ -57,8 +57,10 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 The project is using pytest for unit testing.
 
+Add testing framework dependencies
+- `Execute poetry add pytest selenium pytest-dotenv`
+
 Add pytest as a dependency:
-- Install using `pip install pytest`
 - Execute the `Python: Configure Tests` command on the Command Palette in Visual Studio Code
 - Execute the `Python: Discover tests` command
 
@@ -71,6 +73,4 @@ Run unit and integration tests:
 Run Selenium Tests:
 - Download Firefox
 - Download geckodriver.exe and place in project root folder
-- Exectue `pip install selenium`
-- Exectue `pip install pytest-dotenv`
 - Exectue `poetry run pytest todo_app/tests_e2e` from project route
