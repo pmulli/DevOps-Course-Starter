@@ -73,4 +73,4 @@ Run unit and integration tests:
 Run Selenium Tests:
 - Download Firefox
 - Download geckodriver.exe and place in project root folder
-- Exectue `poetry run pytest todo_app/tests_e2e` from project route
+- Exectue `poetry run pytest todo_app/tests_e2e` from project root
