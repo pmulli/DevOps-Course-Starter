@@ -115,6 +115,7 @@ dmypy.json
 ### Virtual environment ###
 env/
 .venv/
+.pyenv/
 
 ### Configuration files ###
 .env
