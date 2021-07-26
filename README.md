@@ -53,6 +53,19 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+### Running the app in a virtual machine (vm)
+- Download and install [`VirtualBox`](https://www.virtualbox.org/) hypervisor
+- Download and install [`Vagrant`](https://www.vagrantup.com/)
+- Start the app in the vm using:
+```bash
+$ vagrant up
+```
+- Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+- You can ssh into the vm using
+```bash
+$ vagrant ssh
+```
+
 ## Testing the application
 
 The project is using pytest for unit testing.
