@@ -115,6 +115,7 @@ dmypy.json
 ### Virtual environment ###
 env/
 .venv/
+.pyenv/
 
 ### Configuration files ###
 .env
@@ -122,3 +123,7 @@ env/
 ### Firefox webdriver files - should download latest ###
 geckodriver.log
 geckodriver.exe
+
+#Vagrant
+.vagrant
+logs.txt
