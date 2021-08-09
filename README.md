@@ -66,6 +66,19 @@ $ vagrant up
 $ vagrant ssh
 ```
 
+### Running the app in Docker
+Download and install [`Docker`](https://www.docker.com/get-started)
+Build the docker image using:
+```bash
+docker build --tag todo-app .
+```
+Run the docker image using:
+```bash
+docker run -p 5000:80 --env-file .env todo-app
+```
+
+
+
 ## Testing the application
 
 The project is using pytest for unit testing.
