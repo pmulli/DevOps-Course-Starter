@@ -68,13 +68,21 @@ $ vagrant ssh
 
 ### Running the app in Docker
 Download and install [`Docker`](https://www.docker.com/get-started)
-Build the docker image using:
+Build the docker image for development using:
 ```bash
-docker build --tag todo-app .
+docker build --target development --tag todo-app:dev .
 ```
-Run the docker image using:
+Build the docker image for production using:
 ```bash
-docker run -p 5000:80 --env-file .env todo-app
+docker build --target production --tag todo-app:prod .
+```
+Run the development docker image using:
+```bash
+docker run -p 5000:5000 --env-file .env --mount type=bind,source="$(pwd)"/todo_app,target=/todo_app todo-app:dev
+```
+Run the production docker image using:
+```bash
+docker run -p 5000:80 --env-file .env todo-app:prod
 ```
 
 
