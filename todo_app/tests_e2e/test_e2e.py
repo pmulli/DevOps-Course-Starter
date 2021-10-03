@@ -12,6 +12,15 @@ def driver():
     with webdriver.Firefox() as driver:
         yield driver
         
+@pytest.fixture(scope='module')
+def driver():
+    opts = webdriver.ChromeOptions()
+    opts.add_argument('--headless')
+    opts.add_argument('--no-sandbox')
+    opts.add_argument('--disable-dev-shm-usage')
+    with webdriver.Chrome(options=opts) as driver:
+        yield driver
+ 
 @pytest.fixture(scope="module")
 def app_with_temp_board():
     # Create the new board & update the board id environment variable
