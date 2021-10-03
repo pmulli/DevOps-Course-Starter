@@ -14,3 +14,9 @@ FROM base as development
 RUN poetry install
 COPY ./todo_app ./todo_app
 ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
+
+FROM base as test
+RUN poetry install
+COPY ./todo_app ./todo_app
+WORKDIR /todo_app
+ENTRYPOINT ["poetry", "run", "pytest"]
