@@ -1,6 +1,7 @@
 script:
   - docker build --target test --tag my-test-image .
   - docker run --env-file .env.test my-test-image tests
+  - docker run my-test-image tests_e2e
 env:
   - FLASK_APP=todo_app/app
   - FLASK_ENV=development
