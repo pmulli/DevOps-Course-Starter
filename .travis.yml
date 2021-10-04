@@ -1,7 +1,7 @@
 script:
   - docker build --target test --tag my-test-image .
   - docker run --env-file .env.test my-test-image tests
-  - docker run --env FLASK_APP --env FLASK_ENV --env TRELLO_BOARD_ID --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
+  - docker run --env FLASK_APP --env FLASK_ENV --env SECRET_KEY --env TRELLO_BOARD_ID --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
 env:
   global:
     - FLASK_APP=todo_app/app
