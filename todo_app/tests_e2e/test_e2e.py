@@ -4,8 +4,16 @@ from todo_app import app
 from todo_app.data.trello_board import TrelloBoard
 import pytest
 from selenium import webdriver
+from dotenv import load_dotenv
 
 test_card_name = 'Test Card'
+
+@pytest.fixture(scope="module")
+def test_env_variable():
+    try:
+        load_dotenv(override=True)
+    except OSError:
+        print("Failed to load dotenv")
 
 @pytest.fixture(scope="module")
 def driver():
