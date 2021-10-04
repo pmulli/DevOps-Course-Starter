@@ -121,6 +121,5 @@ Sensitive env variables encrypted using travis encrypt
 - Install Ruby Gem
 - gem install travis
 - travis login --pro --github-token <github personal access token>
-- travis encrypt --pro SECRET_KEY=<value to encrypt>
 - travis encrypt --pro TRELLO_KEY=<value to encrypt>
 - travis encrypt --pro TRELLO_TOKEN=<value to encrypt>
