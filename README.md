@@ -108,3 +108,18 @@ Run Selenium Tests:
 - Download Firefox
 - Download geckodriver.exe and place in project root folder
 - Exectue `poetry run pytest todo_app/tests_e2e` from project root
+
+### Testing the app in Docker
+docker build --target test --tag my-test-image .
+docker run --env-file .env.test my-test-image tests
+docker run --env-file .env my-test-image tests_e2e
+
+## CI in Travis
+https://app.travis-ci.com/github/pmulli/DevOps-Course-Starter
+Sensitive env variables encrypted using travis encrypt
+- Install Ruby
+- Install Ruby Gem
+- gem install travis
+- travis login --pro --github-token <github personal access token>
+- travis encrypt --pro TRELLO_KEY=<value to encrypt>
+- travis encrypt --pro TRELLO_TOKEN=<value to encrypt>
