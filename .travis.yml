@@ -1,9 +1,9 @@
 script:
     - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-    - docker build --target test --tag pmullineux/todo:v1 .
-    - docker push pmullineux/todo:v1
-    - docker run --env-file .env.test pmullineux/todo:v1 tests
-    - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN pmullineux/todo:v1 tests_e2e
+    - docker build --target test --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
+    - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+    - docker run --env-file .env.test $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests
+    - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests_e2e
 env:
   global:
     - DOCKER_HUB_USERNAME=pmullineux
