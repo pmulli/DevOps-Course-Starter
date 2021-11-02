@@ -1,12 +1,12 @@
 #stage: build docker image
-  script:
-    - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-    - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
-    - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+script:
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+  - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
+  - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
 #stage: test
 #  script:
-    - docker run --env-file .env.test $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests
-    - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests_e2e
+  - docker run --env-file .env.test $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests
+  - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests_e2e
 env:
   global:
     - DOCKER_HUB_USERNAME=pmullineux
