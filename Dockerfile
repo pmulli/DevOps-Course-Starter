@@ -4,6 +4,7 @@ COPY poetry.lock pyproject.toml ./
 
 FROM base as production
 RUN poetry add gunicorn
+RUN poetry config virtualenvs.create false --local && poetry install
 RUN poetry install
 COPY ./todo_app ./todo_app
 COPY ./entrypoint.sh /entrypoint.sh
