@@ -10,6 +10,13 @@ jobs:
         - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
         - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
         - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+    - stage: deploy production image to heroku
+      script:
+        - docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+        - docker pull $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+        - docker tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT registry.heroku.com/todo-pdm/web
+        - docker push registry.heroku.com/todo-pdm/web
+        - heroku container:release web -a todo-pdm
 env:
   global:
     - DOCKER_HUB_USERNAME=pmullineux
