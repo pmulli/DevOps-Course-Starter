@@ -1,17 +1,15 @@
-#stage: build docker image
-script:
-  - docker build --target test --tag my-test-image .
-  - docker run --env-file .env.test my-test-image tests
-  - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
-  
-  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-  - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
-  - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
-#stage: test
-#  script:
-#  - docker run --env-file .env.test $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests
-#  - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT tests_e2e
-#  - docker run -p 5000:80 --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+jobs:
+  include:
+    - stage: build docker test image and run tests
+      script:
+        - docker build --target test --tag my-test-image .
+        - docker run --env-file .env.test my-test-image tests
+        - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
+    - stage: build docker production image and push to docker hub
+      script:
+        - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
+        - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
 env:
   global:
     - DOCKER_HUB_USERNAME=pmullineux
