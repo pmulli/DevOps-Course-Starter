@@ -10,6 +10,8 @@ COPY ./todo_app ./todo_app
 COPY ./entrypoint.sh /entrypoint.sh
 ENV WEBAPP_PORT=80
 EXPOSE ${WEBAPP_PORT}
+ENV PORT=80
+EXPOSE ${PORT}
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
