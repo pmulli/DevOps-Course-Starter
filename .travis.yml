@@ -1,12 +1,31 @@
-script:
-    - docker build --target test --tag my-test-image .
-    - docker run --env-file .env.test my-test-image tests
-    - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
+jobs:
+  include:
+    - stage: build docker test image and run tests
+      script:
+        - docker build --target test --tag my-test-image .
+        - docker run --env-file .env.test my-test-image tests
+        - docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
+    - stage: build docker production image and push to docker hub
+      script:
+        - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - docker build --target production --tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT .
+        - docker push $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+    - stage: deploy production image to heroku
+      script:
+        - docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+        - docker pull $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT
+        - docker tag $DOCKER_HUB_USERNAME/todo:$TRAVIS_COMMIT registry.heroku.com/todo-pdm/web
+        - docker push registry.heroku.com/todo-pdm/web
+        - heroku container:release web -a todo-pdm
 env:
   global:
+    - DOCKER_HUB_USERNAME=pmullineux
+    # DOCKER_HUB_PASSWORD
+    - secure: "b6iUCqsgRU28Rl//FJI9V79w1q5QVEx2ZMT1VuFbKmqC97rjmInC9IRAqtIt3OEbYxDasHwXeb9P5oXCbYUiKj0oOpn0JfABzsgpE/gxqxkJALLCLsXROTsbxdfpm5esQ4XYg7lAN7BE8ar3+ADC/Pa/9oAtSk4iiUH75qr5QdgMt0kFlEwxKAqea//ZqnPpwQ3lG9qGqg2wLNcFTuqsIpBcmn9w4b9LbqQLBDyiqNB2rIf+ymqBSzzFNY8V+KRstV/vmIiPvQTGQbi1yYvMVUH6/Tp7PiWnHGdQWx8LnfpWnagd77UQKIVanPFPuUqEPHwYcPgQRscv7ffvFow7BUgZYne99MamhySUZOMS8caL5aJEh/wm6MN8N/ZtBKtvg+8Ogg05ws5IEiuUw6VhZ2shoL+VhogHreCpdfVOmhRWrfbHGmeWM4FH6b6j32n5hMuG2aVKXIXnD++w36QGMuSWrX2gFX9tGvW3EHnftkNOr1p1uzVO/oK6assz853DDSn8KYl2rZBQeirWlebpo/R01JmGbVpG6jZ4VQ0Gane3B/J0EeLqczCG+tEbWQWs7oofXQRQXRDWx9OzsW0BPj0sE6B97sXFA11DFwlTCbATDJbUbruNTwOuFTYxhuQF00QKDfJPeA/yojLAHfDEoZkAHhjWGB+p8PjxrzjhA0A="
     - SECRET_KEY=secret-key
     # TRELLO_KEY
     - secure: "ncxFq34BNZHezLqRfL1Zn+LfI9CFOSyUNUtQZbPzatGcKFL7prA/xOPHWjdA35pZIK8IC9wuoCLA/VI/ruXUqDk8MB85jOFT7GwBmfs0cvnVLVp499WpTIOeg5OhjO9f5vlfDGBFsG2ButSGwQldtrE2ig5HnKymTKMEWy+wnaRVUZ5GvaM0r+oIuXJrcKMYsLcw4m8iK/J+AvNep3vRPtdue2HEXdTQ9JQUtQ/dbr7NndzpPOjh34ACjjQ6gwy0rDgm5QJPJmm2NAEMkg9Sgxl2VTiPugB+oIp34TuIZJq/WZS/CEqzPcNtoAvzdMogf+7TmCmhDIC6yWBwPLFu5MoMeydoZkTpJoT/jmGXZle525Ms7o2WOHMzqqj7jAQeG3aQVrc7J+RUoU+kF+YpjlSNt+JXSaitsW0U3MIWqg0JbStaAjFYJrYx7UWV9aGeVE+/0XKAheBFRo8ElMXcwfBx/uD+7jJk0CpXziLrYHRxx7pkNjysMkuYoUmVGTspstRMjn/Za/bUJznZEuFWMgg4LKsvDDHwZ3HbLxIroz0NvwHgWEVvgaYz4jw6b+iQSpQvEsllBQ+iZHkdxHPbd3lzBJ4ZG2s5ozN+emquBA12bhOShJcNzALoNvxpJ1XY7Dqsfw1UA1NUi7U5no6w7ob/J3LYhq9fnyDLCJ7QhlI="
     # TRELLO_TOKEN
     - secure: "oON8hxyA5pifPBUzUIX2f2OHxTvCBPuPbv12i2fxeKOPriIKv14J1RNJohbv5dnH4CPTetFD8kGtC2nwaThESotju5DzrDms+v6WMQCu7hyD8fiycbcSikH/Yn1eEVZSAjiwwuN2gstLzclr+H+gY7BiH4/EfgCGJNQ97XvuYSUnJ13z7EwBLg0Hm6aP0tL8SjRAkwva/5djFHY24nGj1IxqdLnM6MlvSlPHQoedv8wECDmTFPGVX14uZ5ipJ4R7Tak6facL84I6VZ0xryLw1s1+hRqp+0/jbXRoidkY8cbf7QSDtD8mGMnIqew0Hdm8vcqeSvHTnS93SmV+AKOl2EvGdHY5ZzmpKxj+RiTZcYO6BNNJkLd231x3TQfWyHX2SGvLHJfik2ao7c+YAGgJRyCQiiQ5jfO2XQ0NTxs6Q7OF+R+haPeszF8MbEXh6cTq2Jk/qZ+EXLrOi/l/D9yvdceV8IYyDkEK//57YRf7b3i8oc16cf3ErXTbTkmPflCkfKmd1HUQ5cCw3xGKVAynBM9ZHRfokkP8FgeZ2GnnahqTECP0BJO3VAQz3EMgx4ESywoIfD1oqZ7lmksVIx0B1OeSWLx42GQ9eevt8NhDwF3VeAokIIClanF6aEyoNINFtKW7mBHINhAyOX5QoaYxlwPyaz/LuihSphIJLZbVs10="
+
 
