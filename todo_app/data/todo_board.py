@@ -6,7 +6,7 @@ load_dotenv()
 trello_key = os.getenv('TRELLO_KEY')
 trello_token = os.getenv('TRELLO_TOKEN')
 
-class TrelloBoard:
+class ToDoBoard:
 
     cards = []
     lists = []
@@ -47,7 +47,7 @@ class TrelloBoard:
     def create_list(self,list_name):
         create_list_url = 'https://api.trello.com/1/lists'
         create_list_response = requests.post(create_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idBoard' : self.board_id, 'name' : list_name})
-        create_list_id = TrelloBoard.parse_create_list_response(create_list_response.json())
+        create_list_id = ToDoBoard.parse_create_list_response(create_list_response.json())
         return create_list_id
 
 
@@ -57,7 +57,7 @@ class TrelloBoard:
     def create_card(self,title,list_id):
         create_card_url = 'https://api.trello.com/1/cards'
         create_card_response = requests.post(create_card_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id, 'name' : title})
-        create_card_id = TrelloBoard.parse_create_card_response(create_card_response.json())
+        create_card_id = ToDoBoard.parse_create_card_response(create_card_response.json())
         return create_card_response
 
 
@@ -66,18 +66,6 @@ class TrelloBoard:
         update_card_list_response = requests.put(update_card_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id})
         return update_card_list_response
 
-    def parse_create_board_response(create_board_response):
-        return TrelloBoard(create_board_response['id'])
-
-    def create_board(board_name):
-        board_url = 'https://api.trello.com/1/boards/'
-        create_board_response = requests.post(board_url, params={ 'key':trello_key,  'token' : trello_token, 'name' : board_name, 'defaultLists' : 'false'})
-        return TrelloBoard.parse_create_board_response(create_board_response.json())
-
-    def delete_board(self):
-        board_url = 'https://api.trello.com/1/boards/' + self.board_id
-        delete_board_response = requests.delete(board_url, params={ 'key':trello_key,  'token' : trello_token})
-        return delete_board_response.status_code==200
 
 class Card:
     def __init__(self, card_id, list_id, name):

@@ -6,8 +6,8 @@ import pytest
 import dotenv
 import os
 
-sample_trello_cards_response = [{'id': '60c71900c47a8259cb2c912d', 'idList': '609542268e084d62bd913af8','name': 'Test Card'}]
-sample_trello_lists_response = [{'id': '609542268e084d62bd913af8', 'name': 'Doing'}]
+sample_todo_cards_response = [{'id': '60c71900c47a8259cb2c912d', 'idList': '609542268e084d62bd913af8','name': 'Test Card'}]
+sample_todo_lists_response = [{'id': '609542268e084d62bd913af8', 'name': 'Doing'}]
 
 @pytest.fixture
 def client():
@@ -30,17 +30,17 @@ def test_index_page(mock_get_requests, client):
     assert b"Test Card" in response.data
     
 def mock_get(url, params):
-    if url == f'https://api.trello.com/1/boards/'+os.environ['TRELLO_BOARD_ID']+'/cards':
+    if url == f'https://api.trello.com/1/boards/'+os.environ['TODO_BOARD_ID']+'/cards':
         response = Mock()
         
         # sample_trello_lists_response should point to some test response data
-        response.json.return_value = sample_trello_cards_response
+        response.json.return_value = sample_todo_cards_response
         return response
-    elif url == f'https://api.trello.com/1/boards/'+os.environ['TRELLO_BOARD_ID']+'/lists':
+    elif url == f'https://api.trello.com/1/boards/'+os.environ['TODO_BOARD_ID']+'/lists':
         response = Mock()
         
         # sample_trello_lists_response should point to some test response data
-        response.json.return_value = sample_trello_lists_response
+        response.json.return_value = sample_todo_lists_response
         return response
     return None
 

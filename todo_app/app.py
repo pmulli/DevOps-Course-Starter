@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 
 from todo_app.flask_config import Config
 
-from todo_app.data.trello_board import TrelloBoard
+from todo_app.data.todo_board import ToDoBoard
 
 import os
 
@@ -10,14 +10,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object('todo_app.flask_config.Config')
 
-    trello_board_id = os.getenv('TRELLO_BOARD_ID')
+    todo_board_id = os.getenv('TODO_BOARD_ID')
 
 
     @app.route('/')
     def index():
-        trello_board = TrelloBoard(trello_board_id)
-        items = trello_board.get_cards()
-        lists = trello_board.get_lists()
+        todo_board = ToDoBoard(todo_board_id)
+        items = todo_board.get_cards()
+        lists = todo_board.get_lists()
         item_view_model = ViewModel(items,lists)
         return render_template('index.html', view_model=item_view_model)
 
@@ -26,22 +26,22 @@ def create_app():
     def add_item():
         title = request.form.get('title')
         list_id = request.form.get('idList')
-        trello_board = TrelloBoard(trello_board_id)
-        trello_board.create_card(title, list_id)
+        todo_board = ToDoBoard(todo_board_id)
+        todo_board.create_card(title, list_id)
 
-        items = trello_board.get_cards()
-        lists = trello_board.get_lists()
+        items = todo_board.get_cards()
+        lists = todo_board.get_lists()
         item_view_model = ViewModel(items,lists)
         return render_template('index.html', view_model=item_view_model)
 
     @app.route('/items/<item_id>')
     def update_item_status(item_id):    
         list_id = request.args.get('idList')
-        trello_board = TrelloBoard(trello_board_id)
-        trello_board.update_card_status(item_id, list_id)
+        todo_board = ToDoBoard(todo_board_id)
+        todo_board.update_card_status(item_id, list_id)
 
-        items = trello_board.get_cards()
-        lists = trello_board.get_lists()
+        items = todo_board.get_cards()
+        lists = todo_board.get_lists()
         item_view_model = ViewModel(items,lists)
         return render_template('index.html', view_model=item_view_model)
 

@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 from todo_app import app
-from todo_app.data.trello_board import TrelloBoard
+from todo_app.data.todo_board import ToDoBoard
 import pytest
 from selenium import webdriver
 from dotenv import load_dotenv
@@ -32,16 +32,16 @@ def driver():
 @pytest.fixture(scope="module")
 def app_with_temp_board():
     # Create the new board & update the board id environment variable
-    trello_board = TrelloBoard.create_board('Test Board')
-    os.environ['TRELLO_BOARD_ID'] = trello_board.board_id
+    todo_board = ToDoBoard.create_board('Test Board')
+    os.environ['TODO_BOARD_ID'] = todo_board.board_id
 
     # Add item and check it appears on the page
-    test_to_do_list_id = trello_board.create_list('To Do')
+    test_to_do_list_id = todo_board.create_list('To Do')
     os.environ['test_to_do_list_id'] = test_to_do_list_id
-    test_done_list_id = trello_board.create_list('Done')
+    test_done_list_id = todo_board.create_list('Done')
     os.environ['test_done_list_id'] = test_done_list_id
-    trello_board.create_card(test_card_name, test_to_do_list_id)
-    trello_board.get_cards()
+    todo_board.create_card(test_card_name, test_to_do_list_id)
+    todo_board.get_cards()
 
     # construct the new application
     application = app.create_app()
@@ -55,7 +55,7 @@ def app_with_temp_board():
 
     # Tear Down
     thread.join(1)
-    trello_board.delete_board()
+    todo_board.delete_board()
 
 def test_task_journey(driver, app_with_temp_board):
     driver.get('http://localhost:5000/')
