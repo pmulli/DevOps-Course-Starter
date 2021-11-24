@@ -66,6 +66,18 @@ class ToDoBoard:
         update_card_list_response = requests.put(update_card_list_url, params={ 'key':trello_key, 'token' : trello_token, 'idList' : list_id})
         return update_card_list_response
 
+    def parse_create_board_response(create_board_response):
+        return ToDoBoard(create_board_response['id'])
+
+    def create_board(board_name):
+        board_url = 'https://api.trello.com/1/boards/'
+        create_board_response = requests.post(board_url, params={ 'key':trello_key,  'token' : trello_token, 'name' : board_name, 'defaultLists' : 'false'})
+        return ToDoBoard.parse_create_board_response(create_board_response.json())
+
+    def delete_board(self):
+        board_url = 'https://api.trello.com/1/boards/' + self.board_id
+        delete_board_response = requests.delete(board_url, params={ 'key':trello_key,  'token' : trello_token})
+        return delete_board_response.status_code==200
 
 class Card:
     def __init__(self, card_id, list_id, name):
