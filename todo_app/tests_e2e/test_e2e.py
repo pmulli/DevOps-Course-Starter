@@ -34,13 +34,13 @@ def app_with_temp_board():
     # Create the new board & update the board id environment variable
     todo_board = ToDoBoard.create_board('Test Board')
     os.environ['TODO_BOARD_ID'] = todo_board.board_id
+    test_to_do_status = 'To Do'
+    os.environ['test_to_do_status'] = test_to_do_status
+    test_done_status = 'Done'
+    os.environ['test_done_status'] = test_done_status
 
     # Add item and check it appears on the page
-    test_to_do_list_id = todo_board.create_list('To Do')
-    os.environ['test_to_do_list_id'] = test_to_do_list_id
-    test_done_list_id = todo_board.create_list('Done')
-    os.environ['test_done_list_id'] = test_done_list_id
-    todo_board.create_card(test_card_name, test_to_do_list_id)
+    todo_board.create_card(test_card_name, test_to_do_status)
     todo_board.get_cards()
 
     # construct the new application
@@ -65,5 +65,5 @@ def test_task_journey(driver, app_with_temp_board):
     assert test_card_name in driver.page_source
 
     #Change list dropdown and check it has changed
-    driver.find_element_by_xpath("//select[@name='idList']/option[@value='"+os.environ['test_done_list_id']+"']").click()
-    assert driver.find_element_by_id('idList').get_attribute('value') == os.environ['test_done_list_id']
+    driver.find_element_by_xpath("//select[@name='status']/option[@value='"+os.environ['test_done_status']+"']").click()
+    assert driver.find_element_by_id('status').get_attribute('value') == os.environ['test_done_status']

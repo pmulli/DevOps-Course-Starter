@@ -17,32 +17,29 @@ def create_app():
     def index():
         todo_board = ToDoBoard(todo_board_id)
         items = todo_board.get_cards()
-        lists = todo_board.get_lists()
-        item_view_model = ViewModel(items,lists)
+        item_view_model = ViewModel(items)
         return render_template('index.html', view_model=item_view_model)
 
     
     @app.route('/items', methods=['POST'])
     def add_item():
         title = request.form.get('title')
-        list_id = request.form.get('idList')
+        status = request.form.get('status')
         todo_board = ToDoBoard(todo_board_id)
-        todo_board.create_card(title, list_id)
+        todo_board.create_card(title, status)
 
         items = todo_board.get_cards()
-        lists = todo_board.get_lists()
-        item_view_model = ViewModel(items,lists)
+        item_view_model = ViewModel(items)
         return render_template('index.html', view_model=item_view_model)
 
     @app.route('/items/<item_id>')
     def update_item_status(item_id):    
-        list_id = request.args.get('idList')
+        status = request.args.get('status')
         todo_board = ToDoBoard(todo_board_id)
-        todo_board.update_card_status(item_id, list_id)
+        todo_board.update_card_status(item_id, status)
 
         items = todo_board.get_cards()
-        lists = todo_board.get_lists()
-        item_view_model = ViewModel(items,lists)
+        item_view_model = ViewModel(items)
         return render_template('index.html', view_model=item_view_model)
 
     if __name__ == '__main__':
@@ -51,9 +48,8 @@ def create_app():
     return app
 
 class ViewModel:
-    def __init__(self, items, lists):
+    def __init__(self, items):
         self._items = items
-        self._lists = lists
         self._todo_items = []
         self._doing_items = []
         self._done_items = []
@@ -74,18 +70,12 @@ class ViewModel:
     @property
     def done_items(self):
         return self._done_items
-
-    @property
-    def lists(self):
-        return self._lists
-    
+   
     def categorise(self):
-        for list in self._lists:
-            for item in self._items:
-                if item.list_id == list.list_id:
-                    if list.name == 'To Do':
-                        self._todo_items+=[item]
-                    elif list.name == 'Doing':
-                        self._doing_items+=[item]
-                    elif list.name == 'Done':
-                        self._done_items+=[item]
+        for item in self._items:
+            if item.status == 'To Do':
+                self._todo_items+=[item]
+            elif item.status == 'Doing':
+                self._doing_items+=[item]
+            elif item.status == 'Done':
+                self._done_items+=[item]
