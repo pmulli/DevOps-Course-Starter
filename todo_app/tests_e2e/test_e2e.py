@@ -5,6 +5,7 @@ from todo_app.data.todo_board import ToDoBoard
 import pytest
 from selenium import webdriver
 from dotenv import load_dotenv
+import pymongo
 
 test_card_name = 'Test Card'
 
@@ -31,8 +32,8 @@ def driver():
  
 @pytest.fixture(scope="module")
 def app_with_temp_board():
-    # Create the new board & update the board id environment variable
-    todo_board = ToDoBoard.create_board('Test Board')
+    os.environ['TODO_DB_NAME'] = 'test-todo'
+    todo_board = ToDoBoard('Test Board')
     os.environ['TODO_BOARD_ID'] = todo_board.board_id
     test_to_do_status = 'To Do'
     os.environ['test_to_do_status'] = test_to_do_status
@@ -55,7 +56,8 @@ def app_with_temp_board():
 
     # Tear Down
     thread.join(1)
-    todo_board.delete_board()
+    client = pymongo.MongoClient(os.getenv('DB_CONNECTION_URL'))
+    client.drop_database(os.getenv('TODO_DB_NAME'))
 
 def test_task_journey(driver, app_with_temp_board):
     driver.get('http://localhost:5000/')
