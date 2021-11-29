@@ -1,11 +1,8 @@
-import os, requests, pymongo
+import os, pymongo
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 
 load_dotenv()
-
-trello_key = os.getenv('TRELLO_KEY')
-trello_token = os.getenv('TRELLO_TOKEN')
 
 client = pymongo.MongoClient(os.getenv('DB_CONNECTION_URL'))
 db = client[os.getenv('TODO_DB_NAME')]

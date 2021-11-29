@@ -6,7 +6,8 @@ COPY poetry.lock pyproject.toml ./
 FROM base as production
 RUN poetry config virtualenvs.create false --local && poetry install
 RUN poetry add gunicorn
-RUN poetry install
+RUN poetry add pymongo
+RUN poetry add pymongo[srv]
 COPY ./todo_app ./todo_app
 COPY ./entrypoint.sh /entrypoint.sh
 ENV WEBAPP_PORT=80
@@ -22,7 +23,9 @@ COPY ./todo_app ./todo_app
 ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
 
 FROM base as test
+RUN pip install mongomock
 RUN poetry install
+RUN poetry add mongomock
 RUN apt-get update -qqy && apt-get install -qqy wget gnupg unzip
 # Install Chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
