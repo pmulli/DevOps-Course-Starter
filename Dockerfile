@@ -6,6 +6,7 @@ COPY poetry.lock pyproject.toml ./
 FROM base as production
 RUN poetry config virtualenvs.create false --local && poetry install
 RUN poetry add gunicorn
+RUN pip install pymongo
 RUN poetry add pymongo
 RUN poetry add pymongo[srv]
 COPY ./todo_app ./todo_app
