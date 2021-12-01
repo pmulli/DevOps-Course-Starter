@@ -30,7 +30,7 @@ class ToDoBoard:
         return card_id
 
     def update_card_status(self,card_id,status):
-        return db.cards.update({'_id': ObjectId(card_id)},  {'$set': {"status": status}}) 
+        return db.cards.update_one({'_id': ObjectId(card_id)},  {'$set': {"status": status}}) 
 
 class Card:
     def __init__(self, card_id, board_id, status, name):
