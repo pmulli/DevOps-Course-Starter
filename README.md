@@ -32,7 +32,8 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
-The application uses Trello's API to fetch and save to-do tasks. In order to call their API, you need to ﬁrst [create an account](http://trello.com/signup), then generate an API key and token by following the [instructions here](https://trello.com/app-key). TRELLO_KEY and TRELLO_TOKEN variables need to be set in the `.env` file.
+The application uses MongoDB to fetch and save to-do tasks. DB_CONNECTION_URL, TODO_DB_NAME and TODO_BOARD_ID variables need to be set in the `.env` file.
+https://cloud.mongodb.com/v2/619cbd1bc2bd301fe7bf4421#clusters
 
 ## Running the App
 
@@ -114,12 +115,10 @@ docker build --target test --tag my-test-image .
 docker run --env-file .env.test my-test-image tests
 docker run --env-file .env my-test-image tests_e2e
 
-## CI in Travis
-https://app.travis-ci.com/github/pmulli/DevOps-Course-Starter
-Sensitive env variables encrypted using travis encrypt
-- Install Ruby
-- Install Ruby Gem
-- gem install travis
-- travis login --pro --github-token <github personal access token>
-- travis encrypt --pro TRELLO_KEY=<value to encrypt>
-- travis encrypt --pro TRELLO_TOKEN=<value to encrypt>
+## CI in Github Actions
+https://github.com/pmulli/DevOps-Course-Starter/actions
+Ensure secrets are added for DB_CONNECTION_URL, DOCKER_HUB_PASSWORD, DOCKER_HUB_USERNAME, HEROKU_API_KEY, SECRET_KEY
+
+## CD in Heroku
+https://dashboard.heroku.com/apps/todo-pdm
+
