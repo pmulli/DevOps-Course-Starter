@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: docker build --target test --tag my-test-image .
-    #- run: docker run --env-file .env.test my-test-image tests
+    - run: docker run --env-file .env.test my-test-image tests
     - run: docker run --env SECRET_KEY --env DB_CONNECTION_URL --env TODO_DB_NAME my-test-image tests_e2e
 
   push:
