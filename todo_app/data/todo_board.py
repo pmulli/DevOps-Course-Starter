@@ -1,11 +1,10 @@
 import os, pymongo
-from dotenv import load_dotenv
 from bson.objectid import ObjectId
 
-load_dotenv()
-
-client = pymongo.MongoClient(os.getenv('DB_CONNECTION_URL'))
-db = client[os.getenv('TODO_DB_NAME')]
+def getDB():
+    client = pymongo.MongoClient(os.getenv('DB_CONNECTION_URL'))
+    db = client[os.getenv('TODO_DB_NAME')]
+    return db
 
 class ToDoBoard:
 
@@ -21,16 +20,16 @@ class ToDoBoard:
         return self.cards
 
     def get_cards(self):
-        cards_json = db.cards.find({"boardId": self.board_id})
+        cards_json = getDB().cards.find({"boardId": self.board_id})
         return self.parse_get_cards_response(cards_json)
 
     def create_card(self,title,status):
         card = {"boardId": self.board_id,"status": status,"name":title}
-        card_id = db.cards.insert_one(card).inserted_id
+        card_id = getDB().cards.insert_one(card).inserted_id
         return card_id
 
     def update_card_status(self,card_id,status):
-        return db.cards.update_one({'_id': ObjectId(card_id)},  {'$set': {"status": status}}) 
+        return getDB().cards.update_one({'_id': ObjectId(card_id)},  {'$set': {"status": status}}) 
 
 class Card:
     def __init__(self, card_id, board_id, status, name):
