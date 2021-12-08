@@ -1,5 +1,6 @@
 name: To Do app CI & CD
-on: [push, pull_request]
+#on: [push, pull_request]
+on: [push]
 
 jobs:
   test:

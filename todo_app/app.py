@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 from todo_app.flask_config import Config
 
@@ -30,7 +30,7 @@ def create_app():
 
         items = todo_board.get_cards()
         item_view_model = ViewModel(items)
-        return render_template('index.html', view_model=item_view_model)
+        return redirect('/')
 
     @app.route('/items/<item_id>')
     def update_item_status(item_id):    
