@@ -1,10 +1,11 @@
 import os
 from threading import Thread
 from todo_app import app
-from todo_app.data.trello_board import TrelloBoard
+from todo_app.data.todo_board import ToDoBoard
 import pytest
 from selenium import webdriver
 from dotenv import load_dotenv
+import pymongo
 
 test_card_name = 'Test Card'
 
@@ -31,17 +32,17 @@ def driver():
  
 @pytest.fixture(scope="module")
 def app_with_temp_board():
-    # Create the new board & update the board id environment variable
-    trello_board = TrelloBoard.create_board('Test Board')
-    os.environ['TRELLO_BOARD_ID'] = trello_board.board_id
+    os.environ['TODO_DB_NAME'] = 'test-todo'
+    todo_board = ToDoBoard('Test Board')
+    os.environ['TODO_BOARD_ID'] = todo_board.board_id
+    test_to_do_status = 'To Do'
+    os.environ['test_to_do_status'] = test_to_do_status
+    test_done_status = 'Done'
+    os.environ['test_done_status'] = test_done_status
 
     # Add item and check it appears on the page
-    test_to_do_list_id = trello_board.create_list('To Do')
-    os.environ['test_to_do_list_id'] = test_to_do_list_id
-    test_done_list_id = trello_board.create_list('Done')
-    os.environ['test_done_list_id'] = test_done_list_id
-    trello_board.create_card(test_card_name, test_to_do_list_id)
-    trello_board.get_cards()
+    todo_board.create_card(test_card_name, test_to_do_status)
+    todo_board.get_cards()
 
     # construct the new application
     application = app.create_app()
@@ -55,7 +56,8 @@ def app_with_temp_board():
 
     # Tear Down
     thread.join(1)
-    trello_board.delete_board()
+    client = pymongo.MongoClient(os.getenv('DB_CONNECTION_URL'))
+    client.drop_database(os.getenv('TODO_DB_NAME'))
 
 def test_task_journey(driver, app_with_temp_board):
     driver.get('http://localhost:5000/')
@@ -65,5 +67,5 @@ def test_task_journey(driver, app_with_temp_board):
     assert test_card_name in driver.page_source
 
     #Change list dropdown and check it has changed
-    driver.find_element_by_xpath("//select[@name='idList']/option[@value='"+os.environ['test_done_list_id']+"']").click()
-    assert driver.find_element_by_id('idList').get_attribute('value') == os.environ['test_done_list_id']
+    driver.find_element_by_xpath("//select[@name='status']/option[@value='"+os.environ['test_done_status']+"']").click()
+    assert driver.find_element_by_id('status').get_attribute('value') == os.environ['test_done_status']

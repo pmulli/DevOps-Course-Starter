@@ -1,5 +1,6 @@
 name: To Do app CI & CD
-on: [push, pull_request]
+#on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
@@ -7,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        TRELLO_KEY: ${{ secrets.TRELLO_KEY }}
-        TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+        DB_CONNECTION_URL: ${{ secrets.DB_CONNECTION_URL }}
+        TODO_DB_NAME: todo
     steps:
     - uses: actions/checkout@v2
     - run: docker build --target test --tag my-test-image .
     - run: docker run --env-file .env.test my-test-image tests
-    - run: docker run --env SECRET_KEY --env TRELLO_KEY --env TRELLO_TOKEN my-test-image tests_e2e
+    - run: docker run --env SECRET_KEY --env DB_CONNECTION_URL --env TODO_DB_NAME my-test-image tests_e2e
 
   push:
     name: build docker production image and push to docker hub

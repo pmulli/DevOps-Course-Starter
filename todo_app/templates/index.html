@@ -9,11 +9,11 @@
 
   <form action = "/items" method = "post">
     <p>Add item: <input type="text" name="title" />
-      <select name="idList" id="idList">
-      {% for list in view_model.lists %}
-        <option value="{{ list.list_id }}">{{ list.name }}</option>
-      {% endfor %}
-    </select> <input type="submit" value="submit" /></p>
+      <select name="status" id="status">
+        <option value="To Do">To Do</option>
+        <option value="Doing">Doing</option>
+        <option value="Done">Done</option>
+      </select> <input type="submit" value="submit" /></p>
  </form>
 
   <p>(Use the dropdown lists to change the status of an existing item)</p>
@@ -24,10 +24,10 @@
         {% for item in view_model.todo_items %}
           <form action = "/items/{{item.card_id}}" method = "get">
             <li>{{item.name}} 
-              <select name="idList" id="idList" onchange="this.form.submit()">
-                {% for list in view_model.lists %}
-                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
-                {% endfor %}
+              <select name="status" id="status" onchange="this.form.submit()">
+                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
               </select>
             </li>
           </form>
@@ -40,10 +40,10 @@
         {% for item in view_model.doing_items %}
           <form action = "/items/{{item.card_id}}" method = "get">
             <li>{{item.name}} 
-              <select name="idList" id="idList" onchange="this.form.submit()">
-                {% for list in view_model.lists %}
-                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
-                {% endfor %}
+              <select name="status" id="status" onchange="this.form.submit()">
+                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
               </select>
             </li>
           </form>
@@ -56,10 +56,10 @@
         {% for item in view_model.done_items %}
           <form action = "/items/{{item.card_id}}" method = "get">
             <li>{{item.name}} 
-              <select name="idList" id="idList" onchange="this.form.submit()">
-                {% for list in view_model.lists %}
-                  <option value="{{ list.list_id }}"{% if list.list_id == item.list_id %} SELECTED{% endif %}>{{ list.name }}</option>
-                {% endfor %}
+              <select name="status" id="status" onchange="this.form.submit()">
+                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
               </select>
             </li>
           </form>

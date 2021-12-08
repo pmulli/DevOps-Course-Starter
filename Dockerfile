@@ -1,11 +1,10 @@
 FROM python:3.9.2-slim-buster as base
+RUN pip install --upgrade pip
 RUN pip install poetry
 COPY poetry.lock pyproject.toml ./
 
 FROM base as production
 RUN poetry config virtualenvs.create false --local && poetry install
-RUN poetry add gunicorn
-RUN poetry install
 COPY ./todo_app ./todo_app
 COPY ./entrypoint.sh /entrypoint.sh
 ENV WEBAPP_PORT=80
