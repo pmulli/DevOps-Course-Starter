@@ -6,7 +6,7 @@ from todo_app.data.todo_board import ToDoBoard
 
 import os
 
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager, login_required, UserMixin, login_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 import sys
@@ -28,7 +28,8 @@ def create_app():
         
     @login_manager.user_loader
     def load_user(user_id):
-        return None
+        print('load_user: '+str(user_id))
+        return User(user_id)
 
     login_manager.init_app(app) 
 
@@ -36,11 +37,27 @@ def create_app():
     def login():
         request_code = request.args.get('code')
         client = WebApplicationClient(github_client_id)
-        data={'client_id': github_client_id, 'client_secret': github_client_secret, 'code': request_code}
-        resp = requests.post('https://github.com/login/oauth/access_token', data)
-        print(resp.text, file=sys.stdout)
-        #client.parse_request_body_response(resp)
-        return redirect('/error')
+        
+        token_url, headers, body = client.prepare_token_request(
+            'https://github.com/login/oauth/access_token',
+            authorization_response=request.url,
+            redirect_url=request.base_url,
+            code=request_code,
+            client_secret=github_client_secret
+        )
+
+        token_resp = requests.post(token_url, headers=headers, data=body)
+        client.parse_request_body_response(token_resp.text)
+
+        get_user_uri, headers, body = client.add_token('https://api.github.com/user')
+        user_info_resp = requests.get(get_user_uri, headers=headers, data=body)
+        print(user_info_resp.text, file=sys.stdout)
+        user_id=user_info_resp.json()["id"]
+        print('get user: '+str(user_id), file=sys.stdout)
+        user = User(user_id)
+        login_user(user)
+
+        return redirect('/')
 
     @app.route('/')
     @login_required
@@ -78,6 +95,13 @@ def create_app():
         app.run()
 
     return app
+
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+    def get_id(self):
+        return self.id
 
 class ViewModel:
     def __init__(self, items):
