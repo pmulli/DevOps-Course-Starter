@@ -32,6 +32,9 @@ def driver():
  
 @pytest.fixture(scope="module")
 def app_with_temp_board():
+    # Can't get it working from .env.test
+    os.environ['LOGIN_DISABLED'] = 'True'
+
     os.environ['TODO_DB_NAME'] = 'test-todo'
     todo_board = ToDoBoard('Test Board')
     os.environ['TODO_BOARD_ID'] = todo_board.board_id
@@ -46,6 +49,8 @@ def app_with_temp_board():
 
     # construct the new application
     application = app.create_app()
+    
+    application.config['LOGIN_DISABLED'] = (os.environ['LOGIN_DISABLED'] == 'True')
 
     # start the app in its own thread.
     thread = Thread(target=lambda:

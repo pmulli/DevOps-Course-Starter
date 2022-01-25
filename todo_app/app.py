@@ -35,6 +35,8 @@ def create_app():
 
     @app.route('/login/callback')
     def login():
+        #TODO - state check
+        
         request_code = request.args.get('code')
         client = WebApplicationClient(github_client_id)
         
