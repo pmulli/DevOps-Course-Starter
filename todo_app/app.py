@@ -137,6 +137,7 @@ class ViewModel:
         self._doing_items = []
         self._done_items = []
         self.categorise()
+        self._role = current_user.role
         
     @property
     def items(self):
@@ -162,3 +163,7 @@ class ViewModel:
                 self._doing_items+=[item]
             elif item.status == 'Done':
                 self._done_items+=[item]
+
+    @property
+    def role(self):
+        return self._role
