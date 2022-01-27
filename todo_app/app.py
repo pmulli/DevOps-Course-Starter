@@ -10,7 +10,6 @@ from flask_login import LoginManager, login_required, UserMixin, login_user, cur
 from oauthlib.oauth2 import WebApplicationClient
 from functools import wraps
 import requests
-import sys
 
 def create_app():
     app = Flask(__name__)
@@ -32,7 +31,6 @@ def create_app():
         
     @login_manager.user_loader
     def load_user(user_id):
-        print('load_user: '+str(user_id))
         return User(user_id)
 
     login_manager.init_app(app) 
@@ -57,9 +55,7 @@ def create_app():
 
         get_user_uri, headers, body = client.add_token('https://api.github.com/user')
         user_info_resp = requests.get(get_user_uri, headers=headers, data=body)
-        print(user_info_resp.text, file=sys.stdout)
         user_id=user_info_resp.json()["id"]
-        print('get user: '+str(user_id), file=sys.stdout)
         user = User(user_id)
         login_user(user)
 
