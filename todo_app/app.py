@@ -70,7 +70,7 @@ def create_app():
     def index():
         todo_board = ToDoBoard(todo_board_id)
         items = todo_board.get_cards()
-        item_view_model = ViewModel(items)
+        item_view_model = ViewModel(items, current_user.role)
         return render_template('index.html', view_model=item_view_model)
 
     
@@ -84,7 +84,7 @@ def create_app():
         todo_board.create_card(title, status)
 
         items = todo_board.get_cards()
-        item_view_model = ViewModel(items)
+        item_view_model = ViewModel(items, current_user.role)
         return redirect('/')
 
     @app.route('/items/<item_id>')
@@ -96,7 +96,7 @@ def create_app():
         todo_board.update_card_status(item_id, status)
 
         items = todo_board.get_cards()
-        item_view_model = ViewModel(items)
+        item_view_model = ViewModel(items, current_user.role)
         return render_template('index.html', view_model=item_view_model)
 
     if __name__ == '__main__':
@@ -131,13 +131,13 @@ def writer_required(f):
     return wrap
 
 class ViewModel:
-    def __init__(self, items):
+    def __init__(self, items, user_role):
         self._items = items
         self._todo_items = []
         self._doing_items = []
         self._done_items = []
         self.categorise()
-        self._role = current_user.role
+        self._user_role = user_role
         
     @property
     def items(self):
@@ -165,5 +165,5 @@ class ViewModel:
                 self._done_items+=[item]
 
     @property
-    def role(self):
-        return self._role
+    def user_role(self):
+        return self._user_role
