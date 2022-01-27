@@ -32,7 +32,6 @@ def driver():
  
 @pytest.fixture(scope="module")
 def app_with_temp_board():
-    # Can't get it working from .env.test
     os.environ['LOGIN_DISABLED'] = 'True'
 
     os.environ['TODO_DB_NAME'] = 'test-todo'

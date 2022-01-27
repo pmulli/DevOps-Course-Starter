@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 
 from todo_app.flask_config import Config
 
@@ -6,8 +6,9 @@ from todo_app.data.todo_board import ToDoBoard
 
 import os
 
-from flask_login import LoginManager, login_required, UserMixin, login_user
+from flask_login import LoginManager, login_required, UserMixin, login_user, current_user, AnonymousUserMixin
 from oauthlib.oauth2 import WebApplicationClient
+from functools import wraps
 import requests
 import sys
 
@@ -19,7 +20,10 @@ def create_app():
     github_client_id = os.getenv('CLIENT_ID')
     github_client_secret = os.getenv('CLIENT_SECRET')
 
+    app.config['LOGIN_DISABLED'] = os.getenv('LOGIN_DISABLED') == 'True'
+
     login_manager = LoginManager()
+    login_manager.anonymous_user = MyCustomAnonymousUser
 
     @login_manager.unauthorized_handler
     def unauthenticated():
@@ -72,6 +76,7 @@ def create_app():
     
     @app.route('/items', methods=['POST'])
     @login_required
+    @writer_required
     def add_item():
         title = request.form.get('title')
         status = request.form.get('status')
@@ -84,6 +89,7 @@ def create_app():
 
     @app.route('/items/<item_id>')
     @login_required
+    @writer_required
     def update_item_status(item_id):    
         status = request.args.get('status')
         todo_board = ToDoBoard(todo_board_id)
@@ -101,9 +107,28 @@ def create_app():
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+        if id == 42806788:
+            self.role = "writer"
+        else:
+            self.role = "reader"
 
     def get_id(self):
         return self.id
+
+class MyCustomAnonymousUser(AnonymousUserMixin):
+    def __init__(self):
+        self.role = "writer"
+
+def writer_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if current_user.role == "writer":
+            return f(*args, **kwargs)
+        else:
+            flash("Permission Denied: You do not have the required role to perform this action.")
+            return redirect('/')
+
+    return wrap
 
 class ViewModel:
     def __init__(self, items):
