@@ -25,7 +25,7 @@ class TestItems:
         items = [Card('60c71900c47a8259cb2c912d',TestItems.board_id,'To Do','Test Card')]
         
         #Act
-        item_view_model = ViewModel(items)
+        item_view_model = ViewModel(items,'reader')
 
         #Assert
         assert item_view_model.items[0].card_id == '60c71900c47a8259cb2c912d'
@@ -40,7 +40,7 @@ class TestItems:
         items+= [Card('60c71900c47a8259cb2c912c',TestItems.board_id,'Done','Test Done Card')]
         
         #Act
-        item_view_model = ViewModel(items)
+        item_view_model = ViewModel(items,'reader')
 
         #Assert
         assert item_view_model.todo_items[0].card_id == '60c71900c47a8259cb2c912a'

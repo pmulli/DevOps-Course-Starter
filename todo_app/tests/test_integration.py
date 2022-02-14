@@ -3,6 +3,7 @@ from todo_app import app
 import pytest
 import dotenv
 import mongomock
+import os
 
 @pytest.fixture
 def client():
@@ -13,6 +14,7 @@ def client():
     # Use the app to create a test_client that can be used in our tests.
     with mongomock.patch(servers=(('fakemongo.com', 27017),)):
         test_app = app.create_app()
+        test_app.config['LOGIN_DISABLED'] = True
         with test_app.test_client() as client:
             yield client 
 

@@ -46,6 +46,8 @@ def app_with_temp_board():
 
     # construct the new application
     application = app.create_app()
+    
+    application.config['LOGIN_DISABLED'] = 'True'
 
     # start the app in its own thread.
     thread = Thread(target=lambda:

@@ -6,31 +6,38 @@
     <h1 class="display-4">To-Do App</h1>
     <p class="lead">Just another to-do app.</p>
   </div>
+  
+  {% if 'writer' == view_model.user_role %}
+    <form action = "/items" method = "post">
+      <p>Add item: <input type="text" name="title" />
+        <select name="status" id="status">
+          <option value="To Do">To Do</option>
+          <option value="Doing">Doing</option>
+          <option value="Done">Done</option>
+        </select> <input type="submit" value="submit" /></p>
+    </form>
 
-  <form action = "/items" method = "post">
-    <p>Add item: <input type="text" name="title" />
-      <select name="status" id="status">
-        <option value="To Do">To Do</option>
-        <option value="Doing">Doing</option>
-        <option value="Done">Done</option>
-      </select> <input type="submit" value="submit" /></p>
- </form>
+    <p>(Use the dropdown lists to change the status of an existing item)</p>
+  {% endif %}
 
-  <p>(Use the dropdown lists to change the status of an existing item)</p>
   <div class="row">
     <div class="col">
       <h2>To Do</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.todo_items %}
-          <form action = "/items/{{item.card_id}}" method = "get">
-            <li>{{item.name}} 
-              <select name="status" id="status" onchange="this.form.submit()">
-                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
-                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
-                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
-              </select>
-            </li>
-          </form>
+          {% if 'writer' == view_model.user_role %}
+            <form action = "/items/{{item.card_id}}" method = "get">
+              <li>{{item.name}} 
+                <select name="status" id="status" onchange="this.form.submit()">
+                  <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                  <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                  <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
+                </select>
+              </li>
+            </form>
+          {% else %}
+            <li>{{item.name}}</li> 
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
@@ -38,15 +45,19 @@
       <h2>Doing</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.doing_items %}
-          <form action = "/items/{{item.card_id}}" method = "get">
-            <li>{{item.name}} 
-              <select name="status" id="status" onchange="this.form.submit()">
-                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
-                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
-                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
-              </select>
-            </li>
-          </form>
+          {% if 'writer' == view_model.user_role %}
+            <form action = "/items/{{item.card_id}}" method = "get">
+              <li>{{item.name}} 
+                <select name="status" id="status" onchange="this.form.submit()">
+                  <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                  <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                  <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
+                </select>
+              </li>
+            </form>
+          {% else %}
+            <li>{{item.name}}</li> 
+          {% endif %}
         {% endfor %}
       </ul>
     </div>
@@ -54,15 +65,19 @@
       <h2>Done</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.done_items %}
-          <form action = "/items/{{item.card_id}}" method = "get">
-            <li>{{item.name}} 
-              <select name="status" id="status" onchange="this.form.submit()">
-                <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
-                <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
-                <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
-              </select>
-            </li>
-          </form>
+          {% if 'writer' == view_model.user_role %}
+            <form action = "/items/{{item.card_id}}" method = "get">
+              <li>{{item.name}} 
+                <select name="status" id="status" onchange="this.form.submit()">
+                  <option value="To Do"{% if 'To Do' == item.status %} SELECTED{% endif %}>To Do</option>
+                  <option value="Doing"{% if 'Doing' == item.status %} SELECTED{% endif %}>Doing</option>
+                  <option value="Done"{% if 'Done' == item.status %} SELECTED{% endif %}>Done</option>
+                </select>
+              </li>
+            </form>
+          {% else %}
+            <li>{{item.name}}</li> 
+          {% endif %}
         {% endfor %}
       </ul>
     </div>

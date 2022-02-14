@@ -54,6 +54,12 @@ You should see output similar to the following:
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+### Authentication
+The application's authentication is secured using GitHub OAuth.
+
+### Authentication
+The application's authorisation is secured using role based auth. Only users with a 'writer' role will be able to create and update items.
+
 ### Running the app in a virtual machine (vm)
 - Download and install [`VirtualBox`](https://www.virtualbox.org/) hypervisor
 - Download and install [`Vagrant`](https://www.vagrantup.com/)
