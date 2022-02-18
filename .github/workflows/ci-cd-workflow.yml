@@ -26,8 +26,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-    - run: docker build --target production --tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} .
+    - run: docker build --target production --tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} --tag $DOCKER_HUB_USERNAME/todo:latest .
     - run: docker push $DOCKER_HUB_USERNAME/todo:${{ github.sha }}
+    - run: docker push $DOCKER_HUB_USERNAME/todo:latest
 
   deploy:
     name: deploy production image to heroku
