@@ -47,4 +47,4 @@ jobs:
       - run: docker tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} registry.heroku.com/todo-pdm/web
       - run: docker push registry.heroku.com/todo-pdm/web
       - run: heroku container:release web -a todo-pdm
-      - run: sh .github/workflows/webhook.sh
+      - run: sh ./.github/webhook.sh
