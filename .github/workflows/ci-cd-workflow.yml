@@ -37,7 +37,8 @@ jobs:
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        WEBHOOK_USERNAME: ${{ secrets.WEBHOOK_USERNAME }}
+        WEBHOOK_PASSWORD: ${{ secrets.WEBHOOK_PASSWORD }}
     needs: push
     # if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' # include this line if you want to limit the deployment to the master branch
     steps:
