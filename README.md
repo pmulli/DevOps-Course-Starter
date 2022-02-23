@@ -123,8 +123,10 @@ docker run --env-file .env my-test-image tests_e2e
 
 ## CI in Github Actions
 https://github.com/pmulli/DevOps-Course-Starter/actions
-Ensure secrets are added for DB_CONNECTION_URL, DOCKER_HUB_PASSWORD, DOCKER_HUB_USERNAME, HEROKU_API_KEY, SECRET_KEY
+Ensure secrets are added for DB_CONNECTION_URL, DOCKER_HUB_PASSWORD, DOCKER_HUB_USERNAME, HEROKU_API_KEY, SECRET_KEY, WEBHOOK_USERNAME, WEBHOOK_PASSWORD
 
 ## CD in Heroku
 https://dashboard.heroku.com/apps/todo-pdm
 
+## Deployed in Azure
+http://pdm-todo.azurewebsites.net/
