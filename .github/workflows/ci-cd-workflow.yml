@@ -26,16 +26,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-    - run: docker build --target production --tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} .
+    - run: docker build --target production --tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} --tag $DOCKER_HUB_USERNAME/todo:latest .
     - run: docker push $DOCKER_HUB_USERNAME/todo:${{ github.sha }}
+    - run: docker push $DOCKER_HUB_USERNAME/todo:latest
 
   deploy:
-    name: deploy production image to heroku
+    name: deploy production image to heroku and azure
     runs-on: ubuntu-latest
     env:
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        WEBHOOK_USERNAME: ${{ secrets.WEBHOOK_USERNAME }}
+        WEBHOOK_PASSWORD: ${{ secrets.WEBHOOK_PASSWORD }}
     needs: push
     # if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' # include this line if you want to limit the deployment to the master branch
     steps:
@@ -45,3 +48,4 @@ jobs:
       - run: docker tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} registry.heroku.com/todo-pdm/web
       - run: docker push registry.heroku.com/todo-pdm/web
       - run: heroku container:release web -a todo-pdm
+      - run: bash ./webhook.sh
