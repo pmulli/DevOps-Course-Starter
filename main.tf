@@ -16,7 +16,7 @@ data "azurerm_resource_group" "main" {
 }
 
 resource "azurerm_app_service_plan" "main" {
-  name = "terraformed-asp"
+  name = "${var.prefix}-terraformed-asp"
   location = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   kind = "Linux"
@@ -29,24 +29,32 @@ resource "azurerm_app_service_plan" "main" {
 }
 
 resource "azurerm_app_service" "main" {
-  name = "pdm-todo-exercise12"
+  name = "${var.prefix}-pdm-todo-exercise12"
   location = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   app_service_plan_id = azurerm_app_service_plan.main.id
   
   site_config {
     app_command_line = ""
-    linux_fx_version = "DOCKER|appsvcsample/python-helloworld:latest"
+    linux_fx_version = "DOCKER|pmullineux/todo:latest"
   }
   
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "https://index.docker.io"
-    "MONGODB_CONNECTION_STRING" = azurerm_cosmosdb_account.db.connection_strings[0]
+    "DB_CONNECTION_URL" = azurerm_cosmosdb_account.db.connection_strings[0]
+    "CLIENT_ID"="${var.CLIENT_ID}"
+    "CLIENT_SECRET"="${var.CLIENT_SECRET}"
+    "OAUTHLIB_INSECURE_TRANSPORT"="1"
+    "FLASK_APP"="todo_app/app"
+    "FLASK_ENV"="development"
+    "SECRET_KEY"="secret-key"
+    "TODO_BOARD_ID"="609542268e084d62bd913af7"
+    "TODO_DB_NAME"="todo"
   }
 }
 
 resource "azurerm_cosmosdb_account" "db" {
-  name                = "pdm-todo-cosmos-db"
+  name                = "${var.prefix}-pdm-todo-cosmos-db"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
   offer_type          = "Standard"
@@ -87,7 +95,7 @@ resource "azurerm_cosmosdb_account" "db" {
 }
 
 resource "azurerm_cosmosdb_mongo_database" "todo-db" {
-  name                = "pdm-todo-cosmos-mongo-db"
+  name                = "${var.prefix}-pdm-todo-cosmos-mongo-db"
   resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
   account_name        = azurerm_cosmosdb_account.db.name
   lifecycle {
