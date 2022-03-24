@@ -5,6 +5,14 @@ terraform {
       version = ">= 2.49"
     }
   }
+  
+  backend "azurerm" {
+    resource_group_name  = "tfstate"
+    storage_account_name = "tfstate19497"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
+
 }
 
 provider "azurerm" {
@@ -99,6 +107,6 @@ resource "azurerm_cosmosdb_mongo_database" "todo-db" {
   resource_group_name = azurerm_cosmosdb_account.db.resource_group_name
   account_name        = azurerm_cosmosdb_account.db.name
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }

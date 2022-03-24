@@ -132,3 +132,4 @@ logs.txt
 .terraform/
 *.tfstate
 *terraform.*
+!terraform.tfvars.template
