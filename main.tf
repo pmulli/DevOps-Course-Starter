@@ -7,7 +7,7 @@ terraform {
   }
   
   backend "azurerm" {
-    resource_group_name  = "tfstate"
+    resource_group_name  = "AmericanExpress21Group2_PaulMullineux_ProjectExercise"
     storage_account_name = "tfstate19497"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
