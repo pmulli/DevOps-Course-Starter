@@ -130,3 +130,9 @@ https://dashboard.heroku.com/apps/todo-pdm
 
 ## Deployed in Azure
 http://pdm-todo.azurewebsites.net/
+
+## IaC using Terraform
+Create terraform.tfvars file from terraform.tfvars.template
+Add github auth creds
+terraform plan
+terraform apply

@@ -127,3 +127,10 @@ geckodriver.exe
 #Vagrant
 .vagrant
 logs.txt
+
+#Terraform
+.terraform/
+*.tfstate
+*terraform.*
+!terraform.tfvars.template
+!.terraform.lock.hcl
