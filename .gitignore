@@ -133,3 +133,4 @@ logs.txt
 *.tfstate
 *terraform.*
 !terraform.tfvars.template
+!.terraform.lock.hcl
