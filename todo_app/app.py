@@ -135,6 +135,7 @@ class User(UserMixin):
 
 class MyCustomAnonymousUser(AnonymousUserMixin):
     def __init__(self):
+        self.id = 99999999
         self.role = "writer"
 
 def writer_required(f):
