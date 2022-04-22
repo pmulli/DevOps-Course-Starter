@@ -11,10 +11,19 @@ from oauthlib.oauth2 import WebApplicationClient
 from functools import wraps
 import requests
 
+from loggly.handlers import HTTPSHandler
+from logging import Formatter
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('todo_app.flask_config.Config')
     app.logger.setLevel(os.getenv('LOG_LEVEL'))
+
+    if os.getenv('LOG_LEVEL') is not None:
+        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{os.getenv("LOGGLY_TOKEN")}/tag/todo-app')
+        handler.setFormatter(
+        Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
+        app.logger.addHandler(handler)
 
     todo_board_id = os.getenv('TODO_BOARD_ID')
     github_client_id = os.getenv('CLIENT_ID')
