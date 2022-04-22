@@ -14,6 +14,7 @@ import requests
 def create_app():
     app = Flask(__name__)
     app.config.from_object('todo_app.flask_config.Config')
+    app.logger.setLevel(os.getenv('LOG_LEVEL'))
 
     todo_board_id = os.getenv('TODO_BOARD_ID')
     github_client_id = os.getenv('CLIENT_ID')
