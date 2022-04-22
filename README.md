@@ -35,6 +35,10 @@ The `.env` file is used by flask to set environment variables when running `flas
 The application uses MongoDB to fetch and save to-do tasks. DB_CONNECTION_URL, TODO_DB_NAME and TODO_BOARD_ID variables need to be set in the `.env` file.
 https://cloud.mongodb.com/v2/619cbd1bc2bd301fe7bf4421#clusters
 
+Ensure the correct LOG_LEVEL is set in the environment properties.
+
+The application is integrated with Loggly.  Ensure LOGGLY_TOKEN is set in environment properties.
+
 ## Running the App
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
