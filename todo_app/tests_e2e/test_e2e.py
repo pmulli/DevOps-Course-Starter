@@ -32,6 +32,7 @@ def driver():
  
 @pytest.fixture(scope="module")
 def app_with_temp_board():
+    os.environ['LOG_LEVEL'] = 'DEBUG'
     os.environ['TODO_DB_NAME'] = 'test-todo'
     todo_board = ToDoBoard('Test Board')
     os.environ['TODO_BOARD_ID'] = todo_board.board_id

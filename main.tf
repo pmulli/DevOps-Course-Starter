@@ -58,6 +58,7 @@ resource "azurerm_app_service" "main" {
     "SECRET_KEY"="secret-key"
     "TODO_BOARD_ID"="609542268e084d62bd913af7"
     "TODO_DB_NAME"="todo"
+    "LOG_LEVEL"="INFO"
   }
 }
 

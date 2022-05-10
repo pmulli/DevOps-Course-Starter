@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, current_app
 
 from todo_app.flask_config import Config
 
@@ -11,9 +11,19 @@ from oauthlib.oauth2 import WebApplicationClient
 from functools import wraps
 import requests
 
+from loggly.handlers import HTTPSHandler
+from logging import Formatter
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('todo_app.flask_config.Config')
+    app.logger.setLevel(os.getenv('LOG_LEVEL'))
+
+    if os.getenv('LOG_LEVEL') is not None:
+        handler = HTTPSHandler(f'https://logs-01.loggly.com/inputs/{os.getenv("LOGGLY_TOKEN")}/tag/todo-app')
+        handler.setFormatter(
+        Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
+        app.logger.addHandler(handler)
 
     todo_board_id = os.getenv('TODO_BOARD_ID')
     github_client_id = os.getenv('CLIENT_ID')
@@ -27,6 +37,7 @@ def create_app():
     @login_manager.unauthorized_handler
     def unauthenticated():
         client = WebApplicationClient(github_client_id)
+        app.logger.info("User authentication error.")
         return redirect(client.prepare_request_uri('https://github.com/login/oauth/authorize'))
         
     @login_manager.user_loader
@@ -65,6 +76,8 @@ def create_app():
     def index():
         todo_board = ToDoBoard(todo_board_id)
         items = todo_board.get_cards()
+        app.logger.debug("TODO Items count %s", len(items))
+
         item_view_model = ViewModel(items, current_user.role)
         return render_template('index.html', view_model=item_view_model)
 
@@ -76,7 +89,12 @@ def create_app():
         title = request.form.get('title')
         status = request.form.get('status')
         todo_board = ToDoBoard(todo_board_id)
-        todo_board.create_card(title, status)
+        try:
+            item_id = todo_board.create_card(title, status)
+            app.logger.info("TODO Item create success. item_id=\"%s\" name=\"%s\" status=\"%s\" user=\"%s\"", item_id, title, status, current_user.id)
+        except Exception as e:
+            app.logger.error("TODO Item create failed. name=\"%s\" status=\"%s\" user=\"%s\"", title, status, current_user.id)
+            raise
 
         items = todo_board.get_cards()
         item_view_model = ViewModel(items, current_user.role)
@@ -88,7 +106,12 @@ def create_app():
     def update_item_status(item_id):    
         status = request.args.get('status')
         todo_board = ToDoBoard(todo_board_id)
-        todo_board.update_card_status(item_id, status)
+        try:
+            todo_board.update_card_status(item_id, status)
+            app.logger.info("TODO Item update success. item_id=\"%s\" status=\"%s\" user=\"%s\"", item_id, status, current_user.id)
+        except Exception as e:
+            app.logger.error("TODO Item update failed. item_id=\"%s\" status=\"%s\" user=\"%s\"", item_id, status, current_user.id)
+            raise
 
         items = todo_board.get_cards()
         item_view_model = ViewModel(items, current_user.role)
@@ -112,6 +135,7 @@ class User(UserMixin):
 
 class MyCustomAnonymousUser(AnonymousUserMixin):
     def __init__(self):
+        self.id = 99999999
         self.role = "writer"
 
 def writer_required(f):
@@ -120,6 +144,7 @@ def writer_required(f):
         if current_user.role == "writer":
             return f(*args, **kwargs)
         else:
+            current_app.logger.warning("User not authorised to perform writer actions. user=\"%s\" role=\"%s\"", current_user.id, current_user.role)
             flash("Permission Denied: You do not have the required role to perform this action.")
             return redirect('/')
 
