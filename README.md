@@ -96,7 +96,44 @@ Run the production docker image using:
 docker run -p 5000:80 --env-file .env todo-app:prod
 ```
 
-
+### Running the app on minikube
+Download and install [`Docker`](https://www.docker.com/get-started)
+Download and install [`Kubectl`](https://kubernetes.io/docs/tasks/tools/)
+Download and install [`minikube`](https://minikube.sigs.k8s.io/docs/start/)
+Start minikube cluster
+```bash
+minikube start
+```
+Build the docker image for production using:
+```bash
+docker build --target production --tag todo-app:prod .
+```
+Load docker image into minikube image store
+```bash
+minikube image load todo-app:prod
+```
+Create Kubernetes secrets for sensitive environment variables
+```bash
+kubectl create secret generic todo-minikube \
+   --from-literal=LOGGLY_TOKEN='<loggly oauth token>' \
+   --from-literal=DB_CONNECTION_URL='<db connection url>' \
+   --from-literal=SECRET_KEY='<secret key>' \
+   --from-literal=CLIENT_ID='<Github oauth client id>' \
+   --from-literal=CLIENT_SECRET='<Github oauth client secret>'
+```
+Deploy a pod running the todo app
+```bash
+kubectl apply -f deployment.yaml
+```
+Deploy service that gives access to the pod
+```bash
+kubectl apply -f service.yaml
+```
+Link up the minikube Service with a port on localhost
+```bash
+kubectl port-forward service/module-14 7080:80
+```
+Navigate to the app in a browser [`http://localhost:7080/`](http://localhost:7080/)
 
 ## Testing the application
 
