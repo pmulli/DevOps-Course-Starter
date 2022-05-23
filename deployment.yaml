@@ -1,0 +1,64 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-14
+spec:
+  selector:
+    matchLabels:
+      app: module-14
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: module-14
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:prod-1.0
+          imagePullPolicy: Never
+          env:
+          - name: FLASK_APP
+            value: "todo_app/app"
+          - name: FLASK_ENV
+            value: "production"
+          - name: LOG_LEVEL
+            value: "INFO"
+          - name: LOGGLY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: todo-minikube
+                key: LOGGLY_TOKEN
+                optional: false
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: todo-minikube
+                key: SECRET_KEY
+                optional: false
+          - name: DB_CONNECTION_URL
+            valueFrom:
+              secretKeyRef:
+                name: todo-minikube
+                key: DB_CONNECTION_URL
+                optional: false
+          - name: TODO_DB_NAME
+            value: "todo"
+          - name: TODO_BOARD_ID
+            value: "609542268e084d62bd913af7"
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: todo-minikube
+                key: CLIENT_ID
+                optional: false
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: todo-minikube
+                key: CLIENT_SECRET
+                optional: false
+          - name: OAUTHLIB_INSECURE_TRANSPORT
+            value: "1"
+          ports:
+          - containerPort: 80

@@ -36,7 +36,7 @@ jobs:
     env:
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        #HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         WEBHOOK_USERNAME: ${{ secrets.WEBHOOK_USERNAME }}
         WEBHOOK_PASSWORD: ${{ secrets.WEBHOOK_PASSWORD }}
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -49,11 +49,11 @@ jobs:
     # if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' # include this line if you want to limit the deployment to the master branch
     steps:
       - uses: actions/checkout@v2
-      - run: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
-      - run: docker pull $DOCKER_HUB_USERNAME/todo:${{ github.sha }}
-      - run: docker tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} registry.heroku.com/todo-pdm/web
-      - run: docker push registry.heroku.com/todo-pdm/web
-      - run: heroku container:release web -a todo-pdm
+      #- run: docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+      #- run: docker pull $DOCKER_HUB_USERNAME/todo:${{ github.sha }}
+      #- run: docker tag $DOCKER_HUB_USERNAME/todo:${{ github.sha }} registry.heroku.com/todo-pdm/web
+      #- run: docker push registry.heroku.com/todo-pdm/web
+      #- run: heroku container:release web -a todo-pdm
       - run: terraform init
       - run: terraform apply -auto-approve -var prefix="prod"
       - run: bash ./webhook.sh
